@@ -1,0 +1,35 @@
+Options -Indexes
+
+<IfModule mod_mime.c>
+    AddType application/manifest+json .json
+    AddType application/javascript .js
+</IfModule>
+
+# Evitar exposición de archivos sensibles (logs, backups, etc.)
+<FilesMatch "(^\.|\.sql$|\.log$|\.env$|\.md$|\.markdown$|env\.local\.php$)">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Bloquear scripts de debug/migracion por HTTP (siguen pudiendo correrse por CLI)
+<FilesMatch "^(check_.*|debug_.*|export_db|verify_db_tables|test_db_connection|create_field_user|migrar_.*|pwa_check)\.php$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Bloquear carpetas internas por HTTP (igual se usan vía include)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(config|database|includes|models|logs|docs)/ - [F,L]
+    RewriteRule ^\.git - [F,L]
+</IfModule>

@@ -1,0 +1,700 @@
+/**
+ * SOLUFEED - Estilos Principales
+ * Diseño limpio, profesional e intuitivo con Sidebar
+ */
+
+/* ========================================
+   RESETEO Y CONFIGURACIÓN BASE
+======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+    line-height: 1.6;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ========================================
+   SIDEBAR LATERAL
+======================================== */
+
+.sidebar {
+    width: 260px;
+    background: linear-gradient(180deg, #2c5530 0%, #1e3d22 100%);
+    color: white;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.sidebar-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+}
+
+.sidebar-logo {
+    font-size: 2rem;
+    margin-bottom: 0.3rem;
+}
+
+.sidebar-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.sidebar-subtitle {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin: 0;
+}
+
+.sidebar-menu {
+    padding: 1rem 0;
+}
+
+.menu-section {
+    margin-bottom: 1.5rem;
+}
+
+.menu-section-title {
+    padding: 0.5rem 1.5rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.6;
+    font-weight: 600;
+}
+
+.menu-item {
+    display: block;
+    padding: 0.75rem 1.5rem;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s;
+    border-left: 3px solid transparent;
+}
+
+.menu-item:hover {
+    background: rgba(255,255,255,0.1);
+    border-left-color: #fff;
+    padding-left: 2rem;
+}
+
+.menu-item.active {
+    background: rgba(255,255,255,0.15);
+    border-left-color: #ffc107;
+    font-weight: 600;
+}
+
+.menu-item-icon {
+    margin-right: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.menu-submenu {
+    padding-left: 0;
+}
+
+.menu-submenu .menu-item {
+    font-size: 0.9rem;
+    padding: 0.6rem 1.5rem;
+}
+
+.sidebar-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 0.85rem;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+/* ========================================
+   CONTENIDO PRINCIPAL (con sidebar)
+======================================== */
+
+.main-wrapper {
+    flex: 1;
+    margin-left: 260px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.top-bar {
+    background: white;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.breadcrumb {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.breadcrumb a {
+    color: #2c5530;
+    text-decoration: none;
+}
+
+.top-bar-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+    width: 100%;
+}
+
+/* ========================================
+   CONTENIDO PRINCIPAL
+======================================== */
+
+.contenido-principal {
+    flex: 1;
+    padding: 2rem 0;
+}
+
+/* ========================================
+   ALERTAS
+======================================== */
+
+.alertas-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.alerta {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-left: 4px solid;
+}
+
+.alerta-warning {
+    border-left-color: #ffc107;
+}
+
+.alerta-danger {
+    border-left-color: #dc3545;
+}
+
+.alerta-info {
+    border-left-color: #17a2b8;
+}
+
+.alerta-icono {
+    font-size: 2rem;
+}
+
+.alerta-contenido {
+    flex: 1;
+}
+
+.alerta-titulo {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+}
+
+.alerta-texto {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.alerta-accion {
+    text-decoration: none;
+    color: #2c5530;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* ========================================
+   GRÁFICOS
+======================================== */
+
+.grafico-container {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 1.5rem;
+}
+
+.grafico-canvas {
+    max-height: 300px;
+}
+
+/* ========================================
+   TARJETAS Y PANELES
+======================================== */
+
+.tarjeta {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 1.5rem;
+}
+
+.tarjeta-titulo {
+    font-size: 1.4rem;
+    color: #2c5530;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+/* Dashboard - Indicadores */
+.indicadores-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.indicador {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.indicador:hover {
+    transform: translateY(-5px);
+}
+
+.indicador-icono {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.indicador-valor {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2c5530;
+    margin: 0.5rem 0;
+}
+
+.indicador-label {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+/* ========================================
+   ACCESOS RÁPIDOS
+======================================== */
+
+.acceso-rapido {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border: 2px solid transparent;
+}
+
+.acceso-rapido:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(44, 85, 48, 0.2);
+    border-color: #2c5530;
+}
+
+.acceso-icono {
+    font-size: 2.5rem;
+    transition: transform 0.3s;
+}
+
+.acceso-rapido:hover .acceso-icono {
+    transform: scale(1.2);
+}
+
+.acceso-texto {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2c5530;
+    text-align: center;
+}
+
+.acceso-rapido:hover .acceso-texto {
+    color: #234425;
+}
+
+/* ========================================
+   FORMULARIOS
+======================================== */
+
+.formulario {
+    max-width: 800px;
+}
+
+.form-grupo {
+    margin-bottom: 1.5rem;
+}
+
+.form-grupo label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.form-grupo input,
+.form-grupo select,
+.form-grupo textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #e1e8ed;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: all 0.3s;
+    font-family: inherit;
+}
+
+.form-grupo input:focus,
+.form-grupo select:focus,
+.form-grupo textarea:focus {
+    outline: none;
+    border-color: #2c5530;
+    box-shadow: 0 0 0 3px rgba(44, 85, 48, 0.1);
+}
+
+.form-grupo textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-grupo small {
+    display: block;
+    margin-top: 0.3rem;
+    color: #666;
+    font-size: 0.85rem;
+}
+
+.input-pequeno {
+    max-width: 200px;
+}
+
+.input-mediano {
+    max-width: 400px;
+}
+
+/* ========================================
+   BOTONES
+======================================== */
+
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.btn-primario {
+    background: #2c5530;
+    color: white;
+}
+
+.btn-primario:hover {
+    background: #234425;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(44, 85, 48, 0.3);
+}
+
+.btn-secundario {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secundario:hover {
+    background: #5a6268;
+}
+
+.btn-peligro {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-peligro:hover {
+    background: #c82333;
+}
+
+.btn-pequeno {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+.btn-grupo {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+/* ========================================
+   TABLAS
+======================================== */
+
+.tabla-responsive {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+table thead {
+    background: #f8f9fa;
+}
+
+table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: #2c5530;
+    border-bottom: 2px solid #dee2e6;
+}
+
+table td {
+    padding: 1rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+table tbody tr {
+    transition: background 0.2s;
+}
+
+table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.tabla-acciones {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.tabla-acciones a,
+.tabla-acciones button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+}
+
+.estado {
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.estado-activo {
+    background: #d4edda;
+    color: #155724;
+}
+
+.estado-inactivo {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* ========================================
+   MENSAJES
+======================================== */
+
+.mensaje {
+    padding: 1rem 1.5rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
+
+.mensaje-exito {
+    background: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+.mensaje-error {
+    background: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+}
+
+.mensaje-info {
+    background: #d1ecf1;
+    color: #0c5460;
+    border-left: 4px solid #17a2b8;
+}
+
+/* ========================================
+   PÁGINA DE LOGIN
+======================================== */
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #2c5530 0%, #3d7a42 100%);
+}
+
+.login-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-card h2 {
+    text-align: center;
+    color: #2c5530;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+}
+
+.login-logo {
+    text-align: center;
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+/* ========================================
+   FOOTER
+======================================== */
+
+.footer-principal {
+    background: #2c5530;
+    color: white;
+    padding: 1.5rem 0;
+    text-align: center;
+    margin-top: 3rem;
+}
+
+.footer-principal p {
+    margin: 0.3rem 0;
+    font-size: 0.9rem;
+}
+
+.creditos {
+    opacity: 0.8;
+    font-size: 0.85rem !important;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+    }
+    
+    .main-wrapper {
+        margin-left: 200px;
+    }
+    
+    .indicadores-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .btn-grupo {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+}
+
+/* ========================================
+   UTILIDADES
+======================================== */
+
+.texto-centro {
+    text-align: center;
+}
+
+.texto-derecha {
+    text-align: right;
+}
+
+.mb-1 { margin-bottom: 1rem; }
+.mb-2 { margin-bottom: 2rem; }
+.mt-1 { margin-top: 1rem; }
+.mt-2 { margin-top: 2rem; }
+
+.texto-exito { color: #28a745; }
+.texto-peligro { color: #dc3545; }
+.texto-info { color: #17a2b8; }
+
+.sin-datos {
+    text-align: center;
+    padding: 3rem;
+    color: #999;
+    font-size: 1.1rem;
+}
+
+.cargando {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+    color: #666;
+}

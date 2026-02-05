@@ -1,0 +1,40 @@
+{
+  "name": "Solufeed Campo",
+  "short_name": "Solufeed",
+  "description": "Sistema de Gestión de Feedlot - Módulo de Campo",
+  "start_url": "admin/campo/index.php",
+  "id": "admin/campo/index.php",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#1a3a1f",
+  "theme_color": "#2c5530",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "assets/img/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/img/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/img/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/img/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": []
+}
