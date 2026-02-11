@@ -462,3 +462,233 @@ document.addEventListener('DOMContentLoaded', () => {
     // Si viene preseleccionado, no filtramos; solo dejamos listo el buscador
   });
 });
+
+// ===============================
+// CAMPO: UX Modo Offline (menú + aviso + banner)
+// Pegar al final de assets/js/scripts.js
+// ===============================
+(function () {
+  function getSidebar() {
+    return document.querySelector('#sidebar')
+      || document.querySelector('.sidebar')
+      || document.querySelector('.side-menu')
+      || document.querySelector('nav.sidebar')
+      || null;
+  }
+
+  function isCampoSession(sidebar) {
+    if (!sidebar) return false;
+    const hasCampoHub = !!sidebar.querySelector('a[href*="admin/campo/index.php"]');
+    const hasAdminDash = !!sidebar.querySelector('a[href*="admin/dashboard.php"]');
+    return hasCampoHub && !hasAdminDash;
+  }
+
+  // Solo estas pantallas deben poder usarse offline para CAMPO
+  const OFFLINE_ALLOWED = [
+    /\/admin\/campo\/index\.php/i,                 // Hub
+    /\/admin\/pesadas\/registrar\.php/i,           // Registrar pesada
+    /\/admin\/alimentaciones\/registrar\.php/i,    // Registrar alimentación
+    /\/admin\/campo\/pendientes_offline\.php/i,    // Cola
+    /\/admin\/logout\.php/i                        // Salir (opcional)
+  ];
+
+  function hrefAllowed(href) {
+    if (!href) return false;
+    try {
+      const u = new URL(href, window.location.origin);
+      const path = u.pathname + (u.search || '');
+      return OFFLINE_ALLOWED.some(rx => rx.test(path));
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function ensureStylesOnce() {
+    if (document.getElementById('offline-campo-styles')) return;
+    const st = document.createElement('style');
+    st.id = 'offline-campo-styles';
+    st.textContent = `
+      .offline-banner{
+        position: sticky; top: 0; z-index: 50;
+        background: #111827; color: #fff;
+        padding: .65rem .85rem;
+        display:flex; align-items:center; justify-content:space-between;
+        border-bottom: 1px solid rgba(255,255,255,.12);
+        font-weight:700;
+      }
+      .offline-banner small{opacity:.85; font-weight:600}
+      .offline-banner .btn{
+        background: rgba(255,255,255,.12);
+        color:#fff; border:1px solid rgba(255,255,255,.18);
+        padding:.35rem .6rem; border-radius:.6rem;
+        text-decoration:none; font-weight:800;
+      }
+      .menu-offline-locked{opacity:.55}
+      .menu-offline-locked .offline-lock{margin-right:.35rem}
+      /* modal */
+      .offline-modal-backdrop{
+        position:fixed; inset:0; background: rgba(0,0,0,.55);
+        z-index: 9998; display:none; align-items:center; justify-content:center;
+        padding: 1rem;
+      }
+      .offline-modal{
+        width:100%; max-width:520px;
+        background:#fff; border-radius: 1rem;
+        box-shadow: 0 20px 60px rgba(0,0,0,.35);
+        overflow:hidden;
+      }
+      .offline-modal .hd{padding:1rem 1rem .6rem 1rem; font-weight:900; font-size:1.05rem}
+      .offline-modal .bd{padding:0 1rem 1rem 1rem; color:#111827; line-height:1.35}
+      .offline-modal .bd ul{margin:.6rem 0 0 1.2rem}
+      .offline-modal .ft{
+        padding:.8rem 1rem; display:flex; gap:.5rem; flex-wrap:wrap;
+        border-top:1px solid #e5e7eb; justify-content:flex-end;
+      }
+      .offline-modal .ft button, .offline-modal .ft a{
+        border-radius:.75rem; padding:.55rem .85rem; font-weight:900;
+        border:1px solid #e5e7eb; background:#f9fafb; color:#111827;
+        text-decoration:none; cursor:pointer;
+      }
+      .offline-modal .ft .primary{background:#111827; color:#fff; border-color:#111827}
+    `;
+    document.head.appendChild(st);
+  }
+
+  function ensureOfflineBanner() {
+    if (document.getElementById('offline-banner')) return;
+    const banner = document.createElement('div');
+    banner.id = 'offline-banner';
+    banner.className = 'offline-banner';
+    banner.innerHTML = `
+      <div>📴 Sin conexión <small>(modo offline)</small></div>
+      <div style="display:flex; gap:.5rem; align-items:center;">
+        <a class="btn" href="/solufeed/admin/campo/index.php">Ir al Hub</a>
+        <a class="btn" href="/solufeed/admin/campo/pendientes_offline.php">Pendientes</a>
+      </div>
+    `;
+    // Insertarlo arriba del contenido principal si existe, sino al body
+    const main = document.querySelector('main') || document.querySelector('.main-content') || document.body;
+    main.prepend(banner);
+  }
+
+  function ensureOfflineModal() {
+    let wrap = document.getElementById('offline-modal-wrap');
+    if (wrap) return wrap;
+
+    wrap = document.createElement('div');
+    wrap.id = 'offline-modal-wrap';
+    wrap.className = 'offline-modal-backdrop';
+    wrap.innerHTML = `
+      <div class="offline-modal" role="dialog" aria-modal="true" aria-label="Modo offline">
+        <div class="hd">📴 Sin conexión</div>
+        <div class="bd">
+          Estás en <strong>modo offline</strong>. En este modo solo podés:
+          <ul>
+            <li>Ver el <strong>Hub</strong></li>
+            <li>Registrar <strong>Pesadas</strong></li>
+            <li>Registrar <strong>Alimentaciones</strong></li>
+            <li>Ver y gestionar <strong>Pendientes Offline</strong></li>
+          </ul>
+          <div style="margin-top:.75rem; opacity:.8;">
+            Las secciones marcadas con 🔒 requieren conexión.
+          </div>
+        </div>
+        <div class="ft">
+          <button type="button" id="offline-modal-close">Cerrar</button>
+          <a href="/solufeed/admin/campo/index.php">Ir al Hub</a>
+          <a href="/solufeed/admin/campo/pendientes_offline.php">Ver Pendientes</a>
+          <button type="button" class="primary" id="offline-modal-retry">Reintentar</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(wrap);
+
+    wrap.addEventListener('click', (e) => {
+      if (e.target === wrap) wrap.style.display = 'none';
+    });
+    wrap.querySelector('#offline-modal-close').addEventListener('click', () => wrap.style.display = 'none');
+    wrap.querySelector('#offline-modal-retry').addEventListener('click', () => window.location.reload());
+
+    return wrap;
+  }
+
+  function showOfflineModal() {
+    const wrap = ensureOfflineModal();
+    wrap.style.display = 'flex';
+  }
+
+  function markMenuLinks(sidebar, isOffline) {
+    const links = sidebar.querySelectorAll('a[href]');
+    links.forEach(a => {
+      const href = a.getAttribute('href') || '';
+      const allowed = hrefAllowed(href);
+
+      // Guardar texto original
+      if (!a.dataset.origText) a.dataset.origText = (a.textContent || '').trim();
+
+      if (isOffline && !allowed) {
+        a.classList.add('menu-offline-locked');
+        a.setAttribute('aria-disabled', 'true');
+        a.setAttribute('title', 'Requiere conexión');
+
+        // Prefijo 🔒 una sola vez
+        const txt = a.dataset.origText;
+        if (!txt.startsWith('🔒')) a.textContent = `🔒 ${txt}`;
+      } else {
+        a.classList.remove('menu-offline-locked');
+        a.removeAttribute('aria-disabled');
+        a.removeAttribute('title');
+        // Restaurar texto original
+        if (a.dataset.origText) a.textContent = a.dataset.origText;
+      }
+    });
+  }
+
+  function interceptClicks(sidebar) {
+    if (sidebar.dataset.offlineInterceptReady === '1') return;
+    sidebar.dataset.offlineInterceptReady = '1';
+
+    sidebar.addEventListener('click', (e) => {
+      const a = e.target.closest('a[href]');
+      if (!a) return;
+
+      const href = a.getAttribute('href') || '';
+      const allowed = hrefAllowed(href);
+
+      // Solo CAMPO + offline + link no permitido
+      if (!navigator.onLine && !allowed) {
+        e.preventDefault();
+        showOfflineModal();
+      }
+    }, true);
+  }
+
+  function init() {
+    const sidebar = getSidebar();
+    if (!sidebar) return;
+    if (!isCampoSession(sidebar)) return;
+
+    ensureStylesOnce();
+
+    function apply() {
+      const offline = !navigator.onLine;
+      markMenuLinks(sidebar, offline);
+      interceptClicks(sidebar);
+      if (offline) ensureOfflineBanner();
+      else {
+        const b = document.getElementById('offline-banner');
+        if (b) b.remove();
+      }
+    }
+
+    window.addEventListener('online', apply);
+    window.addEventListener('offline', apply);
+    apply();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();

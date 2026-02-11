@@ -122,7 +122,11 @@ require_once '../../includes/header.php';
                 <a href="listar.php?estado=todos&orden=<?php echo urlencode($orden); ?><?php echo !empty($busqueda) ? '&busqueda=' . urlencode($busqueda) : ''; ?>" class="<?php echo $estado === 'todos' ? 'active' : ''; ?>">Todos</a>
             </div>
 
-            <?php if ($estado !== 'inactivos'): ?>
+            <?php if ($estado === 'inactivos'): ?>
+                <span class="btn btn-primary btn-sm" style="opacity: 0.5; cursor: not-allowed;" title="Disponible al visualizar Activos o Todos">
+                    <span>➕</span> Nuevo Lote
+                </span>
+            <?php else: ?>
                 <a href="crear.php?return_to=<?php echo $return_to; ?>" class="btn btn-primary btn-sm">
                     <span>➕</span> Nuevo Lote
                 </a>
@@ -184,17 +188,21 @@ require_once '../../includes/header.php';
                             ?>
                             <tr>
                                 <td>
-                                    <strong style="color: var(--primary); font-size: 1.05rem; display: block; margin-bottom: 2px;">
-                                        <?php echo htmlspecialchars($lote['nombre']); ?>
-                                    </strong>
-                                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">
-                                        <?php echo htmlspecialchars($lote['categoria']); ?>
-                                    </div>
-                                    <?php if (!empty($lote['operarios_asignados'])): ?>
-                                        <div style="font-size: 0.75rem; background: #e0f2fe; color: #0284c7; display: inline-flex; align-items: center; padding: 2px 6px; border-radius: 4px; gap: 4px;">
-                                            <span>🧑‍🌾</span> <?php echo htmlspecialchars($lote['operarios_asignados']); ?>
+                                    <div style="flex: 1; text-align: right;">
+                                        <strong style="color: var(--primary); font-size: 1.05rem; display: block; margin-bottom: 2px;">
+                                            <?php echo htmlspecialchars($lote['nombre']); ?>
+                                        </strong>
+                                        <div class="hide-mobile" style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">
+                                            <?php echo htmlspecialchars($lote['categoria']); ?>
                                         </div>
-                                    <?php endif; ?>
+                                        <?php if (!empty($lote['operarios_asignados'])): ?>
+                                            <div style="margin-top: 6px;">
+                                                <span style="font-size: 0.75rem; background: #e0f2fe; color: #0284c7; display: inline-flex; align-items: center; padding: 2px 6px; border-radius: 4px; gap: 4px;">
+                                                    <span>🧑‍🌾</span> <?php echo htmlspecialchars($lote['operarios_asignados']); ?>
+                                                </span>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
                                 </td>
                                 <td><?php echo htmlspecialchars($lote['campo_nombre']); ?></td>
                                 <td>
@@ -214,15 +222,17 @@ require_once '../../includes/header.php';
                                         <span style="color: var(--danger); font-weight: 700;">⚠ Sin dieta</span>
                                     <?php endif; ?>
                                 </td>
-                                <td style="text-align: center;">
-                                    <span style="background: var(--bg-main); padding: 4px 10px; border-radius: 20px; font-weight: 700; font-size: 0.85rem;">
+                                <td>
+                                    <span style="display:block; text-align:center; background: var(--bg-main); padding: 4px 10px; border-radius: 20px; font-weight: 700; font-size: 0.85rem;">
                                         <?php echo (int)$dias_engorde; ?> d
                                     </span>
                                 </td>
-                                <td style="text-align: center;">
-                                    <span class="badge" style="background: <?php echo $activo ? '#dcfce7' : '#f1f5f9'; ?>; color: <?php echo $activo ? '#166534' : '#475569'; ?>; border: 1px solid <?php echo $activo ? '#bbf7d0' : '#e2e8f0'; ?>;">
-                                        <?php echo $activo ? 'Activo' : 'Cerrado'; ?>
-                                    </span>
+                                <td>
+                                    <div style="display:block; text-align:center;">
+                                        <span class="badge" style="background: <?php echo $activo ? '#dcfce7' : '#f1f5f9'; ?>; color: <?php echo $activo ? '#166534' : '#475569'; ?>; border: 1px solid <?php echo $activo ? '#bbf7d0' : '#e2e8f0'; ?>;">
+                                            <?php echo $activo ? 'Activo' : 'Cerrado'; ?>
+                                        </span>
+                                    </div>
                                 </td>
                                 <td style="text-align: right; white-space: nowrap;">
                                     <a href="ver.php?id=<?php echo (int)$lote['id_tropa']; ?>&return_to=<?php echo $return_to; ?>" class="btn btn-secondary btn-action">

@@ -106,7 +106,11 @@ require_once '../../includes/header.php';
                 <a href="listar.php?estado=todos&orden=<?php echo urlencode($orden); ?><?php echo !empty($busqueda) ? '&busqueda=' . urlencode($busqueda) : ''; ?>" class="<?php echo $estado === 'todos' ? 'active' : ''; ?>">Todas</a>
             </div>
 
-            <?php if ($estado !== 'inactivos'): ?>
+            <?php if ($estado === 'inactivos'): ?>
+                <span class="btn btn-primary btn-sm" style="opacity: 0.5; cursor: not-allowed;" title="Disponible al visualizar Activas o Todas">
+                    <span>➕</span> Nueva Dieta
+                </span>
+            <?php else: ?>
                 <a href="crear.php" class="btn btn-primary btn-sm">
                     <span>➕</span> Nueva Dieta
                 </a>
@@ -158,7 +162,8 @@ require_once '../../includes/header.php';
                                 <td>
                                     <strong style="color: var(--primary); font-size: 1.05rem;"><?php echo htmlspecialchars($dieta['nombre']); ?></strong>
                                     <?php if ($dieta['descripcion']): ?>
-                                        <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500; margin-top: 2px;">
+                                        <!-- En móvil ocultamos el detalle para evitar cards rotas (se ve completo en Ver) -->
+                                        <div class="hide-mobile" style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500; margin-top: 2px;">
                                             <?php echo htmlspecialchars(substr($dieta['descripcion'], 0, 80)) . (strlen($dieta['descripcion']) > 80 ? '...' : ''); ?>
                                         </div>
                                     <?php endif; ?>
@@ -178,12 +183,22 @@ require_once '../../includes/header.php';
                                     <?php echo date('d/m/Y', strtotime($dieta['fecha_creacion'])); ?>
                                 </td>
                                 <td style="text-align: right; white-space: nowrap;">
+                                    <?php $activo = ((int)$dieta['activo'] === 1); ?>
                                     <a href="ver.php?id=<?php echo $dieta['id_dieta']; ?>&return_to=<?php echo $return_to; ?>" class="btn btn-secondary btn-action">
                                         <span>👁️</span> <span class="btn-text">Ver</span>
                                     </a>
                                     <a href="editar.php?id=<?php echo $dieta['id_dieta']; ?>&return_to=<?php echo $return_to; ?>" class="btn btn-secondary btn-action">
                                         <span>✏️</span> <span class="btn-text">Editar</span>
                                     </a>
+
+                                    <form method="POST" action="toggle_estado.php" style="display:inline;" onsubmit="return confirm('¿Confirmar cambio de estado de la dieta?')">
+                                        <?php echo csrf_input(); ?>
+                                        <input type="hidden" name="id_dieta" value="<?php echo (int)$dieta['id_dieta']; ?>">
+                                        <input type="hidden" name="return_to" value="<?php echo htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES, 'UTF-8'); ?>">
+                                        <button type="submit" class="btn-state <?php echo $activo ? 'on' : 'off'; ?>" title="<?php echo $activo ? 'Desactivar' : 'Activar'; ?>">
+                                            <?php echo $activo ? '⏸️ Desactivar' : '▶️ Activar'; ?>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

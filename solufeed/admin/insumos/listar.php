@@ -100,7 +100,11 @@ require_once '../../includes/header.php';
                 <a href="listar.php?estado=todos&orden=<?php echo urlencode($orden); ?><?php echo !empty($busqueda) ? '&busqueda=' . urlencode($busqueda) : ''; ?>" class="<?php echo $estado === 'todos' ? 'active' : ''; ?>">Todos</a>
             </div>
 
-            <?php if ($estado !== 'inactivos'): ?>
+            <?php if ($estado === 'inactivos'): ?>
+                <span class="btn btn-primary btn-sm" style="opacity: 0.5; cursor: not-allowed;" title="Disponible al visualizar Activos o Todos">
+                    <span>➕</span> Nuevo Insumo
+                </span>
+            <?php else: ?>
                 <a href="crear.php" class="btn btn-primary btn-sm">
                     <span>➕</span> Nuevo Insumo
                 </a>

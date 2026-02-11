@@ -85,6 +85,65 @@ if ($filtro_estado !== '') $query_extra .= '&estado=' . urlencode($filtro_estado
 if (isset($_GET['ajax'])) {
     if (count($usuarios) > 0) {
         ?>
+        <div class="usuarios-cards" aria-label="Listado de usuarios (móvil)">
+            <?php foreach ($usuarios as $usuario): ?>
+                <?php
+                    $is_me = ((int)$usuario['id_usuario'] === $me);
+                    $is_admin = (($usuario['tipo'] ?? '') === 'ADMIN');
+                    $is_campo = (($usuario['tipo'] ?? '') === 'CAMPO');
+                    $is_activo = !empty($usuario['activo']);
+                ?>
+                <div class="usuario-card<?php echo $is_me ? ' me' : ''; ?>">
+                    <div class="usuario-card-head">
+                        <div class="usuario-card-name">
+                            <?php echo htmlspecialchars($usuario['nombre']); ?>
+                            <?php if ($is_me): ?>
+                                <span class="usuario-me">(Vos)</span>
+                            <?php endif; ?>
+                        </div>
+                        <div class="usuario-card-badges">
+                            <span class="badge badge-<?php echo strtolower($usuario['tipo']); ?>">
+                                <?php echo $is_admin ? '👔 Admin' : '🧑‍🌾 Campo'; ?>
+                            </span>
+                            <span class="badge badge-<?php echo $is_activo ? 'activo' : 'inactivo'; ?>">
+                                <?php echo $is_activo ? '✓ Activo' : '✕ Inactivo'; ?>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="usuario-card-body">
+                        <div class="usuario-row">
+                            <span class="lbl">Email</span>
+                            <span class="val"><?php echo htmlspecialchars($usuario['email']); ?></span>
+                        </div>
+                        <div class="usuario-row">
+                            <span class="lbl">Creación</span>
+                            <span class="val"><?php echo formatearFecha($usuario['fecha_creacion']); ?></span>
+                        </div>
+                    </div>
+
+                    <div class="usuario-card-actions">
+                        <a href="editar.php?id=<?php echo (int)$usuario['id_usuario']; ?>" class="btn btn-secondary btn-action">
+                            <span>✏️</span> <span class="btn-text">Editar</span>
+                        </a>
+                        <?php if ($is_campo): ?>
+                            <a href="asignar_lotes.php?id=<?php echo (int)$usuario['id_usuario']; ?>" class="btn btn-secondary btn-action">
+                                <span>🐮</span> <span class="btn-text">Asignar Lotes</span>
+                            </a>
+                        <?php endif; ?>
+                        <form method="POST" action="toggle_estado.php" style="display:inline;" onsubmit="return confirm('¿Confirmar cambio de estado?')">
+                            <?php echo csrf_input(); ?>
+                            <input type="hidden" name="id_usuario" value="<?php echo (int)$usuario['id_usuario']; ?>">
+                            <input type="hidden" name="return_to" value="<?php echo htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES, 'UTF-8'); ?>">
+                            <button type="submit" class="btn-state <?php echo $is_activo ? 'on' : 'off'; ?>" title="<?php echo $is_activo ? 'Desactivar' : 'Activar'; ?>">
+                                <?php echo $is_activo ? '⏸️ Desactivar' : '▶️ Activar'; ?>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
         <table>
             <thead>
                 <tr>
@@ -299,6 +358,93 @@ require_once '../../includes/header.php';
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
+        /* Cards (solo móvil) */
+        .usuarios-cards { display: none; }
+
+        .usuario-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .usuario-card.me {
+            border-color: #bbf7d0;
+        }
+
+        .usuario-card-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.75rem;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .usuario-card-name {
+            font-weight: 900;
+            color: var(--text);
+            font-size: 1.05rem;
+            line-height: 1.2;
+        }
+
+        .usuario-me {
+            display: inline-block;
+            margin-left: 0.35rem;
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: #166534;
+            background: #dcfce7;
+            border: 1px solid #bbf7d0;
+            padding: 0.1rem 0.4rem;
+            border-radius: 999px;
+            vertical-align: middle;
+        }
+
+        .usuario-card-badges {
+            display: flex;
+            gap: 0.35rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .usuario-card-body {
+            display: grid;
+            gap: 0.5rem;
+            margin-bottom: 0.85rem;
+        }
+
+        .usuario-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.75rem;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 0.5rem;
+        }
+
+        .usuario-row:first-child {
+            border-top: 0;
+            padding-top: 0;
+        }
+
+        .usuario-row .lbl {
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .usuario-row .val {
+            color: var(--text);
+            font-weight: 800;
+            text-align: right;
+        }
+
+        .usuario-card-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -431,12 +577,17 @@ require_once '../../includes/header.php';
         }
 
         @media (max-width: 768px) {
-            .usuarios-table {
-                overflow-x: auto;
+            /* En móvil mostrar cards y ocultar tabla */
+            .usuarios-cards {
+                display: grid;
+                gap: 1rem;
+                padding: 1rem;
             }
 
-            table {
-                min-width: 600px;
+            .usuarios-table table { display: none; }
+
+            .usuarios-table {
+                overflow: visible;
             }
 
             .stats-grid {
@@ -492,6 +643,65 @@ require_once '../../includes/header.php';
         <!-- Tabla de Usuarios -->
         <div class="usuarios-table">
             <?php if (count($usuarios) > 0): ?>
+                <div class="usuarios-cards" aria-label="Listado de usuarios (móvil)">
+                    <?php foreach ($usuarios as $usuario): ?>
+                        <?php
+                            $is_me = ((int)$usuario['id_usuario'] === $me);
+                            $is_admin = (($usuario['tipo'] ?? '') === 'ADMIN');
+                            $is_campo = (($usuario['tipo'] ?? '') === 'CAMPO');
+                            $is_activo = !empty($usuario['activo']);
+                        ?>
+                        <div class="usuario-card<?php echo $is_me ? ' me' : ''; ?>">
+                            <div class="usuario-card-head">
+                                <div class="usuario-card-name">
+                                    <?php echo htmlspecialchars($usuario['nombre']); ?>
+                                    <?php if ($is_me): ?>
+                                        <span class="usuario-me">(Vos)</span>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="usuario-card-badges">
+                                    <span class="badge badge-<?php echo strtolower($usuario['tipo']); ?>">
+                                        <?php echo $is_admin ? '👔 Admin' : '🧑‍🌾 Campo'; ?>
+                                    </span>
+                                    <span class="badge badge-<?php echo $is_activo ? 'activo' : 'inactivo'; ?>">
+                                        <?php echo $is_activo ? '✓ Activo' : '✕ Inactivo'; ?>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="usuario-card-body">
+                                <div class="usuario-row">
+                                    <span class="lbl">Email</span>
+                                    <span class="val"><?php echo htmlspecialchars($usuario['email']); ?></span>
+                                </div>
+                                <div class="usuario-row">
+                                    <span class="lbl">Creación</span>
+                                    <span class="val"><?php echo formatearFecha($usuario['fecha_creacion']); ?></span>
+                                </div>
+                            </div>
+
+                            <div class="usuario-card-actions">
+                                <a href="editar.php?id=<?php echo (int)$usuario['id_usuario']; ?>" class="btn btn-secondary btn-action">
+                                    <span>✏️</span> <span class="btn-text">Editar</span>
+                                </a>
+                                <?php if ($is_campo): ?>
+                                    <a href="asignar_lotes.php?id=<?php echo (int)$usuario['id_usuario']; ?>" class="btn btn-secondary btn-action">
+                                        <span>🐮</span> <span class="btn-text">Asignar Lotes</span>
+                                    </a>
+                                <?php endif; ?>
+                                <form method="POST" action="toggle_estado.php" style="display:inline;" onsubmit="return confirm('¿Confirmar cambio de estado?')">
+                                    <?php echo csrf_input(); ?>
+                                    <input type="hidden" name="id_usuario" value="<?php echo (int)$usuario['id_usuario']; ?>">
+                                    <input type="hidden" name="return_to" value="<?php echo htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES, 'UTF-8'); ?>">
+                                    <button type="submit" class="btn-state <?php echo $is_activo ? 'on' : 'off'; ?>" title="<?php echo $is_activo ? 'Desactivar' : 'Activar'; ?>">
+                                        <?php echo $is_activo ? '⏸️ Desactivar' : '▶️ Activar'; ?>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
                 <table>
                     <thead>
                         <tr>

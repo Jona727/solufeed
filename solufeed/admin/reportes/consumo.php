@@ -157,52 +157,54 @@ if ($lote_filtro > 0) {
     }
 }
 
-include '../../includes/header.php';
+require_once '../../includes/header.php';
 ?>
 
-
-<h1 style="font-weight: 800; color: var(--primary); margin-bottom: 2rem;">📈 Reportes de Consumo</h1>
-</div>
-<!-- Filtros -->
-<div class="card">
-    <h3 class="card-title"><span>🔍</span> Filtros</h3>
-    
-    <form method="GET" class="formulario">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-            
-            <!-- Lote -->
-            <div class="form-grupo">
-                <label for="lote">Lote</label>
-                <select id="lote" name="lote" onchange="this.form.submit()">
-                    <?php foreach ($lotes_disponibles as $lote): ?>
-                        <option value="<?php echo $lote['id_tropa']; ?>"
-                            <?php echo ($lote_filtro == $lote['id_tropa']) ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($lote['nombre']); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            
-            <!-- Fecha desde -->
-            <div class="form-grupo">
-                <label for="fecha_desde">Desde</label>
-                <input type="date" id="fecha_desde" name="fecha_desde" value="<?php echo $fecha_desde; ?>">
-            </div>
-            
-            <!-- Fecha hasta -->
-            <div class="form-grupo">
-                <label for="fecha_hasta">Hasta</label>
-                <input type="date" id="fecha_hasta" name="fecha_hasta" value="<?php echo $fecha_hasta; ?>">
-            </div>
-            
-            <!-- Botón filtrar -->
-            <div class="form-grupo" style="display: flex; align-items: flex-end;">
-                <button type="submit" class="btn btn-primario" style="width: 100%;">Filtrar</button>
-            </div>
-            
+<div class="insumos-container">
+    <div class="page-header">
+        <div>
+            <h1 style="font-weight: 800; color: var(--primary); margin: 0; letter-spacing: -1px;">📈 Reportes</h1>
+            <p style="margin: 0.25rem 0 0 0; color: var(--text-muted); font-size: 0.95rem; font-weight: 500;">
+                Consumo y métricas por lote
+            </p>
         </div>
-    </form>
-</div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card">
+        <h3 class="card-title"><span>🔍</span> Filtros</h3>
+
+        <div class="filters-bar">
+            <form method="GET" action="consumo.php" class="filters-row">
+                <div class="filters-left" style="flex-wrap: wrap;">
+                    <div style="min-width: 240px;">
+                        <label for="lote" style="display:block; font-weight:700; margin-bottom: .35rem;">Lote</label>
+                        <select id="lote" name="lote" class="filter-select" onchange="this.form.submit()">
+                            <?php foreach ($lotes_disponibles as $lote): ?>
+                                <option value="<?php echo (int)$lote['id_tropa']; ?>" <?php echo ($lote_filtro == $lote['id_tropa']) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($lote['nombre']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <div style="min-width: 200px;">
+                        <label for="fecha_desde" style="display:block; font-weight:700; margin-bottom: .35rem;">Desde</label>
+                        <input class="filter-input" type="date" id="fecha_desde" name="fecha_desde" value="<?php echo htmlspecialchars($fecha_desde); ?>">
+                    </div>
+
+                    <div style="min-width: 200px;">
+                        <label for="fecha_hasta" style="display:block; font-weight:700; margin-bottom: .35rem;">Hasta</label>
+                        <input class="filter-input" type="date" id="fecha_hasta" name="fecha_hasta" value="<?php echo htmlspecialchars($fecha_hasta); ?>">
+                    </div>
+
+                    <div style="display:flex; align-items:flex-end; gap:.5rem;">
+                        <button type="submit" class="btn btn-primary btn-sm" style="height: 42px;">Filtrar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
 <?php if ($lote_seleccionado): ?>
 
@@ -492,25 +494,25 @@ include '../../includes/header.php';
     </div>
 </div>
 <?php else: ?>
-<div class="tarjeta">
-    <div class="sin-datos">
-        <p>No hay alimentaciones registradas en el período seleccionado.</p>
-        <a href="../alimentaciones/registrar.php?lote=<?php echo $lote_filtro; ?>" class="btn btn-primario">
-            Registrar Primera Alimentación
-        </a>
-    </div>
+<div class="card">
+    <h3 class="card-title"><span>🍽️</span> Alimentaciones</h3>
+    <p style="color: var(--text-muted);">No hay alimentaciones registradas en el período seleccionado.</p>
+    <a href="../alimentaciones/registrar.php?lote=<?php echo $lote_filtro; ?>" class="btn btn-primary btn-sm">
+        Registrar Primera Alimentación
+    </a>
 </div>
 <?php endif; ?>
 
 <?php else: ?>
 
-<div class="tarjeta">
-    <div class="sin-datos">
-        <p>No hay lotes disponibles para mostrar reportes.</p>
-        <a href="../lotes/crear.php" class="btn btn-primario">Crear Primer Lote</a>
-    </div>
+<div class="card">
+    <h3 class="card-title"><span>ℹ️</span> Sin datos</h3>
+    <p style="color: var(--text-muted);">No hay lotes disponibles para mostrar reportes.</p>
+    <a href="../lotes/crear.php" class="btn btn-primary btn-sm">Crear Primer Lote</a>
 </div>
 
 <?php endif; ?>
+
+</div>
 
 <?php include '../../includes/footer.php'; ?>

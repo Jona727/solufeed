@@ -163,11 +163,15 @@ require_once '../../includes/header.php';
                                         <span style="color: var(--text-muted);">—</span>
                                     <?php endif; ?>
                                 </td>
-                                <td style="text-align:center; font-weight: 800;">
-                                    <?php echo (int)$campo['total_lotes']; ?>
+                                <td style="font-weight: 800;">
+                                    <span style="display:block; text-align:center;">
+                                        <?php echo (int)$campo['total_lotes']; ?>
+                                    </span>
                                 </td>
-                                <td style="text-align:center; font-weight: 800;">
-                                    <?php echo number_format((int)$campo['total_animales']); ?>
+                                <td style="font-weight: 800;">
+                                    <span style="display:block; text-align:center;">
+                                        <?php echo number_format((int)$campo['total_animales']); ?>
+                                    </span>
                                 </td>
                                 <td>
                                     <span class="badge" style="background: <?php echo $activo ? '#dcfce7' : '#fff7ed'; ?>; color: <?php echo $activo ? '#166534' : '#9a3412'; ?>; border: 1px solid <?php echo $activo ? '#bbf7d0' : '#ffedd5'; ?>;">

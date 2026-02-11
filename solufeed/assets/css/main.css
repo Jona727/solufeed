@@ -657,7 +657,7 @@ textarea:focus {
 
     /* Mobile Table Actions */
     .btn-action span.btn-text {
-        display: none;
+        display: inline;
     }
 
     .btn-action {
@@ -719,6 +719,25 @@ textarea:focus {
     color: var(--text-muted);
     flex: 0 0 45%;
     max-width: 45%;
+  }
+
+  /* Special rows (e.g. Totals) shouldn't reserve the left label column */
+  table.responsive-table tr.total-mixer-row td {
+    display: block;
+    text-align: left;
+  }
+  table.responsive-table tr.total-mixer-row td::before { display: none; content: none; }
+  table.responsive-table tr.total-mixer-row .total-mixer-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  table.responsive-table tr.total-mixer-row .total-mixer-title {
+    text-align: left !important;
+  }
+  table.responsive-table tr.total-mixer-row #btnCopiarSugeridos {
+    width: 100%;
+    justify-content: center;
   }
   /* Make action cells wrap nicely */
   table.responsive-table td[data-label*="Accion"],

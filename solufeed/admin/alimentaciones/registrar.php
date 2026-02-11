@@ -464,10 +464,10 @@ include '../../includes/header.php';
                             <?php endforeach; ?>
 
                             <!-- Fila de totales -->
-                            <tr style="background: #f8fafc; font-weight: bold;">
-                                <td colspan="3" style="padding: 1.5rem; font-size: 1.1rem; color: var(--primary);">
-                                    <div style="display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;">
-                                        <span style="text-align:right; flex:1; min-width: 220px;">TOTAL DEL MIXER (Kg):</span>
+                            <tr class="total-mixer-row" style="background: #f8fafc; font-weight: bold;">
+                                <td colspan="3" class="total-mixer-cell" style="padding: 1.5rem; font-size: 1.1rem; color: var(--primary);">
+                                    <div class="total-mixer-header" style="display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;">
+                                        <span class="total-mixer-title" style="text-align:right; flex:1;">TOTAL DEL MIXER (Kg):</span>
                                         <button type="button" class="btn btn-secondary" id="btnCopiarSugeridos" style="white-space:nowrap;">↪️ Copiar sugeridos → reales</button>
                                     </div>
                                 </td>
